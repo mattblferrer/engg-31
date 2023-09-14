@@ -6,6 +6,7 @@
 */
 
 #include "Fraction.h"
+#include <algorithm>
 #include <iostream>
 #include <numeric> 
 #include <sstream>
@@ -120,39 +121,66 @@ ostream& operator<<(ostream& output, const Fraction& f)
 }
 
 // overload the extraction >> operator
-Fraction operator>>(string input, Fraction& f)
+istream& operator>>(istream& input, Fraction& f)
 {
   // process string input by the user into numerator and denominator
   Fraction original = f;
-  string numerator_str, denominator_str;
-  istringstream iss(input);
-  getline(iss, numerator_str, '/');
-  getline(iss, denominator_str);
+  stringstream ss;
+  string input_str, numerator_str, denominator_str, test_str;
+  int numerator;
+  int denominator;
+
+  // take cin input into string
+  getline(input, input_str);  
+
+  // convert to all lowercase
+  for (int i = 0; i < input_str.length(); i++)
+  {
+    input_str[i] = tolower(input_str[i]);
+  }
+
+  // remove input spaces
+  input_str.erase(remove(input_str.begin(), input_str.end(), ' '), 
+    input_str.end());
+
+  // remove = sign
+  int equals_place = input_str.find('=');
+  if (equals_place != string::npos)
+  {
+    input_str.erase(equals_place, equals_place + 1);
+  }
+
+  // split into numerator string and denominator string
+  ss << input_str;
+  getline(ss, numerator_str, '/');
+  getline(ss, denominator_str);
   
   try
   {
-    f.numerator = stoi(numerator_str);  // convert string to int
+    numerator = stoi(numerator_str);  // convert string to int
 
     // if fraction in form (a/b)
     if (denominator_str.length() > 0)
     {
-      f.denominator = stoi(denominator_str);
+      denominator = stoi(denominator_str);
     }
 
     // if integer in form (a)
     else 
     {
-      f.denominator = 1;
+      denominator = 1;
     }
 
-    return f.toLowestTerms();
+    f.numerator = numerator;
+    f.denominator = denominator;
+    f = f.toLowestTerms();
   }
 
   catch (...)  // if parsing fraction failed
   {
     cout << "Invalid fraction entered.\n";
-    return original.toLowestTerms();  // do not change fraction
+    f = original.toLowestTerms();  // do not change fraction
   }
-  
-  
+
+  return input;
 }

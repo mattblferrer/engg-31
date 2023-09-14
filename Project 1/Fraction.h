@@ -27,7 +27,7 @@ class Fraction
     Fraction operator/(const Fraction& f) const;
     friend std::ostream& operator<<(std::ostream& output,
     const Fraction& f);
-    friend Fraction operator>>(std::string input, 
+    friend std::istream& operator>>(std::istream& input, 
     Fraction& f);
 };
 
