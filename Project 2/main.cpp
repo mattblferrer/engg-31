@@ -148,15 +148,24 @@ int main()
             }
           }
 
-          // process input to line class
-          Line L(x1, y1, x2, y2);  
-          if (input == "l1")
+          // check if x1 = x2 and y1 = y2
+          if ((x1 == x2) && (y1 == y2))
           {
-            L1 = L;
+            cout << "Points are the same. Please enter different "
+                 << "points.\n";
           }
-          else
+          else  // points create a valid line
           {
-            L2 = L;
+            // process input to line class
+            Line L(x1, y1, x2, y2);  
+            if (input == "l1")
+            {
+              L1 = L;
+            }
+            else
+            {
+              L2 = L;
+            }
           }
         }
 
